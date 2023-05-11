@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTaskrRequest;
 use App\Http\Resources\TasksResource;
 use App\Models\Task;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TasksController extends Controller
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      */
@@ -40,9 +42,12 @@ class TasksController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Task $task)
     {
-        //
+        if(Auth::user()->id !== $task->user_id){
+            return $this->error('', 'Your not authorized', 403);
+        }
+        return new TasksResource($task);
     }
 
     /**
@@ -56,16 +61,26 @@ class TasksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Task $task)
     {
-        //
+         if(Auth::user()->id !== $task->user_id){
+            return $this->error('', 'Your not authorized', 403);
+        }
+        $task->update($request->all());
+
+        return new TasksResource($task);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Task $task)
     {
-        //
+         if(Auth::user()->id !== $task->user_id){
+            return $this->error('', 'Your not authorized', 403);
+        }
+        $task->delete();
+        return response(null, 204);
     }
 }
