@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\GenerateFacebookToken;
 use App\Http\Controllers\TasksController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::group(['middleware' => ['auth:sanctum']], function() {
   Route::resource('/tasks', TasksController::class);
 Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/getgeneratedtoken', [GenerateFacebookToken::class, 'generatetoken']);
+Route::get('/getlonglivedtoken', [GenerateFacebookToken::class, 'GenerateLongLifeAccessToken']);
 });
 
 
