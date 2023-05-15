@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\GenerateFacebookToken;
+use App\Http\Controllers\GeneratePageAccessToken;
 use App\Http\Controllers\TasksController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/getgeneratedtoken', [GenerateFacebookToken::class, 'generatetoken']);
 Route::get('/getlonglivedtoken', [GenerateFacebookToken::class, 'GenerateLongLifeAccessToken']);
+Route::get('/generatepageaccesstoken', [GeneratePageAccessToken::class, 'index']);
 });
 
 
