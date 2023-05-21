@@ -9,12 +9,12 @@ class StoreFacebookAccessToken extends Model
 {
     use HasFactory;
 
-     protected $table= 'store_facebook_access_tokens';
+     protected $table= 'fb_short_tk';
     protected $fillable = [
-      'user_id', 'access_token'
+      'user_id', 'client_id', 'access_token'
     ];
 
-     public function user(){
+     public function auth_users(){
         return $this->belongsTo(User::class);
     }
 }

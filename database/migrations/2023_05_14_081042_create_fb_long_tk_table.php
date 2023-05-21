@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('store_facebook_access_tokens', function (Blueprint $table) {
+        Schema::create('fb_long_tk', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("user_id")->nullable();
-            $table->string("access_token");
+             $table->unsignedBigInteger("user_id")->nullable();
+             $table->unsignedBigInteger("client_id")->nullable();
+            $table->string("long_lived_access_token");
             $table->foreign('user_id')
             ->references('id')
             ->on('users')
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('store_facebook_access_tokens');
+        Schema::dropIfExists('store_facebook_long_access_tokens');
     }
 };

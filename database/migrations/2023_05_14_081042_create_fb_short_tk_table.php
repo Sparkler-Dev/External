@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_auth_models', function (Blueprint $table) {
+        Schema::create('fb_short_tk', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('client_id')->uniqid();
-            $table->string('username');
-            $table->string('email');
-            $table->string('password');
+             $table->unsignedBigInteger("user_id")->nullable();
+             $table->unsignedBigInteger('client_id');
+            $table->string("access_token");
+            $table->foreign('user_id')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade');
+            
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_auth_models');
+        Schema::dropIfExists('fb_short_tk');
     }
 };

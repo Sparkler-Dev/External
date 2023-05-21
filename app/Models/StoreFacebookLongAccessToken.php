@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class StoreFacebookLongAccessToken extends Model
 {
     use HasFactory;
-     protected $table= 'store_facebook_long_access_tokens';
+     protected $table= 'fb_long_tk';
     protected $fillable = [
-      'user_id', 'long_lived_access_token'
+      'user_id', 'client_id', 'long_lived_access_token'
     ];
 
-     public function user(){
+     public function auth_users(){
         return $this->belongsTo(User::class);
     }
 }

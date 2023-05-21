@@ -22,7 +22,7 @@ class GeneratePageAccessToken extends Controller
         $php_curl = curl_init();
 
         curl_setopt_array($php_curl, array(
-            CURLOPT_URL => "https://graph.facebook.com/v6.0/me?access_token=EAANNGVck75sBAB8CHMcIBIN9MSoJESIv0Wism33rFgCZBmoyiWb59L4kPmcbKUW2cwqe8KGkzzqdMoM9ftFKL1XEkuTzXSZAqQkobtQK9ORbYSt8hP4zftoZCaN4jTZBNSZCJiwXZCU4i5zy5pdWRIDqCKitOFdtEzQkOu0BGnBS56PRFXDkXB",
+            CURLOPT_URL => "https://graph.facebook.com/v6.0/me?access_token=$long_lived_access_token",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_TIMEOUT => 1000,

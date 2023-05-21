@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Resources\StoreFacebookAccessTokenResource;
 use App\Models\StoreFacebookAccessToken;
 use App\Models\StoreFacebookLongAccessToken;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class GenerateFacebookToken extends Controller
 {
@@ -31,7 +33,13 @@ class GenerateFacebookToken extends Controller
      */
     public function generatetoken( Request $request)
     {
+        
+         if(auth('sanctum')->check()){
 
+         $user_id = auth('sanctum')->user();
+        //   return response()->json([
+        //     $user_id,
+        //   ],200);
 
         $client_id = env('CLIENT_ID');
         $code =  $request->code;
@@ -69,12 +77,61 @@ class GenerateFacebookToken extends Controller
                 // return response()->json([
                 //     "token"=> $token_data
                 // ]);
-               return $this->StoreAccessToken($token_data, $error, $request);
+               return $this->StoreAccessToken($user_id, $token_data, $error, $request);
             }
         }
+
+
+         }else{
+            return response()->json([
+             throw new NotFoundHttpException()   
+            ],404);
+         }
+
+        
+
+        // $client_id = env('CLIENT_ID');
+        // $code =  $request->code;
+        // $client_secret = env('CLIENT_SECRET');
+        // $redirect_uri = env('REDIRECT_URI');
+        // $php_curl = curl_init();
+
+        // curl_setopt_array($php_curl, array(
+        //     CURLOPT_URL => "https://graph.facebook.com/v15.0/oauth/access_token?client_id=$client_id&redirect_uri=$redirect_uri&client_secret=$client_secret&code=$code",
+        //     CURLOPT_RETURNTRANSFER => true,
+        //     CURLOPT_ENCODING => "",
+        //     CURLOPT_TIMEOUT => 1000,
+
+        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //     CURLOPT_CUSTOMREQUEST => "GET",
+        //     CURLOPT_HTTPHEADER => array(
+        //         // Set Here Your Laravel curl Requesred Headers
+        //         'Content-Type: application/json',
+        //     ),
+        // ));
+        // $final_results = curl_exec($php_curl);
+        // $err = curl_error($php_curl);
+        // $err = curl_error($php_curl);
+        // curl_close($php_curl);
+
+        // if ($err) {
+        //     echo "Laravel cURL Error #:" . $err;
+        // } else {
+        //      // GET THE RESULT AND RUN INSIDE A FOREACH LOOP
+        //     foreach (json_decode($final_results) as $room_name => $room) {
+        //         $token_data = @$room ;
+        //         $error = @$room->message;
+        //         // PASS THE RESULT AS A PARAMETER TO A NEW FUNCTION
+        //         // return $this->StoreAccessToken($token_data, $error, $request);
+        //         // return response()->json([
+        //         //     "token"=> $token_data
+        //         // ]);
+        //        return $this->StoreAccessToken($token_data, $error, $request);
+        //     }
+        // }
     }
 
-       public function StoreAccessToken($token_data,  $error,  Request $request)
+       public function StoreAccessToken( $user_id, $token_data,  $error,  Request $request)
     {
 
         
@@ -84,12 +141,14 @@ class GenerateFacebookToken extends Controller
         }
 
         // return response()->json([
+        //     $user_id,
         //     $token_data
         // ]);
 
         if($token_data){
             $task = StoreFacebookAccessToken::create([
-          'user_id'=> Auth::user()->id,
+          'user_id'=>  Auth::user()->id,
+          'client_id'=> $user_id->client_id,
           'access_token'=>$token_data,
         ]);
 
@@ -173,9 +232,10 @@ class GenerateFacebookToken extends Controller
         // return response()->json([
         //   "long_lived_facebook_access_token"=> $token_data
         // ]);
-            $user_id = auth('sanctum')->user()->id;
+            $user_id = auth('sanctum')->user();
             $cartitem = new StoreFacebookLongAccessToken;
-            $cartitem->user_id = $user_id;    
+            $cartitem->user_id = $user_id->id;    
+            $cartitem->client_id = $user_id->client_id;    
             $cartitem->long_lived_access_token = $token_data;    
             $cartitem->save();    
             return response()->json([
