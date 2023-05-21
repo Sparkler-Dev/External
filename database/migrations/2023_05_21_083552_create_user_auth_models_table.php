@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('user_auth_models', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('client_id');
-            $table->bigInteger('client_id');
+            $table->bigInteger('client_id')->uniqid();
+            $table->string('username');
+            $table->string('email');
+            $table->string('password');
             $table->timestamps();
         });
     }
