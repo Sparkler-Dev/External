@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
+use App\Models\UserAuthModel;
 use App\Traits\HttpResponses;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class AuthController extends Controller
             return $this->error('', 'Credentials do not match', 401);
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = UserAuthModel::where('email', $request->email)->first();
 
         return $this->success([
             'user' => $user,
@@ -49,8 +50,11 @@ class AuthController extends Controller
         // ], 200);
       
        $request->validated($request->all());
-       $user = User::create([
-        'name'=>$request->name,
+
+       // While auth check client id and client user email already exist
+       
+       $user = UserAuthModel::create([
+        'username'=>$request->name,
         'email'=>$request->email,
         'client_id'=>$client_id,
         'password'=> Hash::make($request->password)
