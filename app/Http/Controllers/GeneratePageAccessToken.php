@@ -13,7 +13,52 @@ class GeneratePageAccessToken extends Controller
     public function index(Request $request)
     {  
         $facebook_long_access_token = StoreFacebookAccessToken::latest('id')->first();
-         return $this->store($facebook_long_access_token, $request);
+
+        // return response()->json([
+        //     "info" => $facebook_long_access_token 
+        // ]);
+
+        $long_lived_access_token = $facebook_long_access_token->access_token;
+        $php_curl = curl_init();
+
+        curl_setopt_array($php_curl, array(
+            CURLOPT_URL => "https://graph.facebook.com/v6.0/me?access_token=EAANNGVck75sBAB8CHMcIBIN9MSoJESIv0Wism33rFgCZBmoyiWb59L4kPmcbKUW2cwqe8KGkzzqdMoM9ftFKL1XEkuTzXSZAqQkobtQK9ORbYSt8hP4zftoZCaN4jTZBNSZCJiwXZCU4i5zy5pdWRIDqCKitOFdtEzQkOu0BGnBS56PRFXDkXB",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_TIMEOUT => 1000,
+
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                // Set Here Your Laravel curl Requesred Headers
+                'Content-Type: application/json',
+            ),
+        ));
+        $final_results = curl_exec($php_curl);
+        $err = curl_error($php_curl);
+        $err = curl_error($php_curl);
+        curl_close($php_curl);
+
+        if ($err) {
+            echo "Laravel cURL Error #:" . $err;
+        } else {
+             // GET THE RESULT AND RUN INSIDE A FOREACH LOOP
+            foreach (json_decode($final_results) as $room_name => $room) {
+                $user_info = @$room;
+                $error = @$room->message;
+
+
+            //    return response()->json([
+            //      "user_page_info"=> json_decode($final_results)
+            //    ],200);
+            }
+        }
+
+         $user_page_info = json_decode($final_results);
+
+          return $this->store( $user_page_info, $facebook_long_access_token, $request);
+         
+        
     }
 
     /**
@@ -27,11 +72,12 @@ class GeneratePageAccessToken extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store( $facebook_long_access_token, $request)
+    public function store($user_page_info, $facebook_long_access_token, $request)
     {
 
 
         //    return response()->json([
+        //      'user_info' => $user_page_info,
         //      "facebook_long_access_token" => $facebook_long_access_token
         //  ]);
 
@@ -39,11 +85,12 @@ class GeneratePageAccessToken extends Controller
         $code =  $request->code;
         $client_secret = env('CLIENT_SECRET');
         $redirect_uri = env('REDIRECT_URI');
+        $user_page_info_id = $user_page_info->id;
         $facebook_long_access_token = $facebook_long_access_token->access_token;
         $php_curl = curl_init();
 
         curl_setopt_array($php_curl, array(
-            CURLOPT_URL => "https://graph.facebook.com/154613990755144/accounts?access_token=$facebook_long_access_token",
+            CURLOPT_URL => "https://graph.facebook.com/$user_page_info_id/accounts?access_token=$facebook_long_access_token",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_TIMEOUT => 1000,
@@ -74,7 +121,8 @@ class GeneratePageAccessToken extends Controller
                 // ]);
             //    return $this->StoreAccessToken($token_data, $error, $request);
                return response()->json([
-                 "facebook_instagram_page_access_token"=> $token_data
+                 'user_page_information'=>$user_page_info,
+                 "facebook_instagram_page_access_token"=> $token_data,
                ],200);
             }
         }

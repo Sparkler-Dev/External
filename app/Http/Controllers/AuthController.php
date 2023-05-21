@@ -6,6 +6,7 @@ use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Traits\HttpResponses;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -30,11 +31,28 @@ class AuthController extends Controller
         ]);
     }
 
+     public function generate_clientID(){
+        //User Registration
+        $client_id = mt_rand(10000000000000,99999999999999);
+        $timeparse = Carbon::now()->format('Ymdhms');
+        return $client_id + intval($timeparse);
+        // return $client_id;
+    }
+
     public function register(StoreUserRequest $request){
+
+        $client_id = $this->generate_clientID();
+
+        // return response()->json([
+        //     $client_id,
+
+        // ], 200);
+      
        $request->validated($request->all());
        $user = User::create([
         'name'=>$request->name,
         'email'=>$request->email,
+        'client_id'=>$client_id,
         'password'=> Hash::make($request->password)
        ]);
 
