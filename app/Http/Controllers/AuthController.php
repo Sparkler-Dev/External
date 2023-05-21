@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Requests\StoreUserRequest;
+use App\Models\ClientID;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Carbon\Carbon;
@@ -39,6 +40,7 @@ class AuthController extends Controller
         // return $client_id;
     }
 
+
     public function register(StoreUserRequest $request){
 
         $client_id = $this->generate_clientID();
@@ -53,17 +55,38 @@ class AuthController extends Controller
        // While auth check client id and client user email already exist
        
        $user = User::create([
-        'id'=> $client_id,
         'name'=>$request->name,
         'email'=>$request->email,
         'client_id'=>$client_id,
         'password'=> Hash::make($request->password)
        ]);
 
-       return $this->success([
-         'user'=>$user,
-         'token'=>$user->createToken('API Token of'. $user->name)->plainTextToken
+       
+
+       return $this->create_client_id($user);
+     
+
+
+    }
+
+        public function create_client_id($user) {
+
+    //     return $this->success([
+    //      'user'=>$user,
+    //      'token'=>$user->createToken('API Token of'. $user->name)->plainTextToken
+    //    ]);
+
+         $store_client_info = ClientID::create([
+          'user_id'=>$user->id, 
+         'name'=>$user->name,
+        'email'=>$user->email,
+        'client_id'=>$user->client_id,
        ]);
+       
+        return $this->success([
+         'client_info'=>$store_client_info,
+       ]);
+
     }
 
     public function logout()

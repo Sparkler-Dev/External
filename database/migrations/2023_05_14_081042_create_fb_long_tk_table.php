@@ -16,7 +16,7 @@ return new class extends Migration
              $table->unsignedBigInteger("user_id")->nullable();
              $table->bigInteger("client_id")->nullable();
             $table->string("long_lived_access_token");
-            $table->foreign('user_id')
+             $table->foreign('user_id')
             ->references('id')
             ->on('users')
             ->onDelete('cascade');
