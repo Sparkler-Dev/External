@@ -53,6 +53,7 @@ class AuthController extends Controller
        // While auth check client id and client user email already exist
        
        $user = User::create([
+        'id'=> $client_id,
         'name'=>$request->name,
         'email'=>$request->email,
         'client_id'=>$client_id,

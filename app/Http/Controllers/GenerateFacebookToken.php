@@ -148,7 +148,7 @@ class GenerateFacebookToken extends Controller
         if($token_data){
             $task = StoreFacebookAccessToken::create([
           'user_id'=>  Auth::user()->id,
-          'client_id'=> $user_id->client_id,
+          'client_id'=> Auth::user()->client_id,
           'access_token'=>$token_data,
         ]);
 
@@ -233,8 +233,7 @@ class GenerateFacebookToken extends Controller
         //   "long_lived_facebook_access_token"=> $token_data
         // ]);
             $user_id = auth('sanctum')->user();
-            $cartitem = new StoreFacebookLongAccessToken;
-            $cartitem->user_id = $user_id->id;    
+            $cartitem = new StoreFacebookLongAccessToken; 
             $cartitem->client_id = $user_id->client_id;    
             $cartitem->long_lived_access_token = $token_data;    
             $cartitem->save();    

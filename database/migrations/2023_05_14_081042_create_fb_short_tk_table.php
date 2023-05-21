@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('fb_short_tk', function (Blueprint $table) {
             $table->id();
              $table->unsignedBigInteger("user_id")->nullable();
-             $table->unsignedBigInteger('client_id');
+             $table->bigInteger('client_id');
             $table->string("access_token");
             $table->foreign('user_id')
             ->references('id')
