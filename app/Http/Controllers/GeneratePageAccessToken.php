@@ -74,7 +74,7 @@ class GeneratePageAccessToken extends Controller
                 // ]);
             //    return $this->StoreAccessToken($token_data, $error, $request);
                return response()->json([
-                 "facebook_page_access_token"=> $token_data
+                 "facebook_instagram_page_access_token"=> $token_data
                ],200);
             }
         }
