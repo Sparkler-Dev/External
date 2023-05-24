@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreFBInstPageAccessToken;
 use App\Models\StoreFacebookAccessToken;
+use App\Models\StoreFBInstaPageAccessToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GeneratePageAccessToken extends Controller
 {
@@ -81,7 +84,7 @@ class GeneratePageAccessToken extends Controller
         //      "facebook_long_access_token" => $facebook_long_access_token
         //  ]);
 
-           $client_id = env('CLIENT_ID');
+        $client_id = env('CLIENT_ID');
         $code =  $request->code;
         $client_secret = env('CLIENT_SECRET');
         $redirect_uri = env('REDIRECT_URI');
@@ -127,6 +130,24 @@ class GeneratePageAccessToken extends Controller
             }
         }
 
+
+    }
+
+    public function StoreFBInstaPageAccessToken(StoreFBInstPageAccessToken $request) {
+          $request->validated($request->all());
+           
+           $store_page_access_token =  StoreFBInstaPageAccessToken::create([
+          'user_id'=> Auth::user()->id,
+          'client_id'=> Auth::user()->client_id,
+          'page_name'=>$request->page_name,
+          'access_token'=>$request->access_token,
+          'page_category'=>$request->page_category,
+          'page_id'=>$request->page_id,
+        ]);
+
+        return response()->json([
+            'response' => $store_page_access_token
+        ]);
 
     }
 

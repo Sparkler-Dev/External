@@ -13,7 +13,7 @@ class StoreFacebookLongAccessToken extends Model
       'user_id', 'client_id', 'long_lived_access_token'
     ];
 
-     public function auth_users(){
-        return $this->belongsTo(User::class);
-    }
+    public function user(){
+         return $this->belongsTo(User::class);
+     }
 }

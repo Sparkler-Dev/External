@@ -24,6 +24,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/getgeneratedtoken', [GenerateFacebookToken::class, 'generatetoken']);
 Route::get('/getlonglivedtoken', [GenerateFacebookToken::class, 'GenerateLongLifeAccessToken']);
 Route::get('/generatepageaccesstoken', [GeneratePageAccessToken::class, 'index']);
+Route::post('/store_fb_insta_page_access_token', [GeneratePageAccessToken::class, 'StoreFBInstaPageAccessToken']);
 });
 
 
