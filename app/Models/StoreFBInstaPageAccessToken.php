@@ -12,7 +12,7 @@ class StoreFBInstaPageAccessToken extends Model
     protected $fillable = [
       'user_id', 'client_id', 'page_name', 'access_token', 'page_category',  'page_id'
     ];
-     public function user(){
-         return $this->belongsTo(User::class);
-     }
+      public function user(){
+        return $this->belongsTo(User::class, 'user_id' , 'id');
+    }
 }

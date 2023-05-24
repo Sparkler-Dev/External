@@ -178,7 +178,7 @@ class GenerateFacebookToken extends Controller
          $client_secret = env('CLIENT_SECRET');
          $access_token = $temp_token->access_token;
 
-          $product = new StoreFacebookLongAccessToken;
+        $product = new StoreFacebookLongAccessToken;
         $product->long_lived_access_token = $request->long_lived_access_token;
         $product->long_lived_access_token = $access_token;
         // SEND THE REQUIRED BODY ALONG WITH ACCESS TOKEN FROM @GetAccessToken FUNCTION
