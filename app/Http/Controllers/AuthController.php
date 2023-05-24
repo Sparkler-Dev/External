@@ -85,6 +85,7 @@ class AuthController extends Controller
        
         return $this->success([
          'client_info'=>$store_client_info,
+         'token'=>$user->createToken('API Token of'. $user->name)->plainTextToken
        ]);
 
     }

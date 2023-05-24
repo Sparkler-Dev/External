@@ -234,7 +234,8 @@ class GenerateFacebookToken extends Controller
         // ]);
             $user_id = auth('sanctum')->user();
             $cartitem = new StoreFacebookLongAccessToken; 
-            $cartitem->client_id = $user_id->client_id;    
+            $cartitem->client_id = $user_id->client_id;  
+            $cartitem->user_id = $user_id->id;  
             $cartitem->long_lived_access_token = $token_data;    
             $cartitem->save();    
             return response()->json([
