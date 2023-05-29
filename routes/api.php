@@ -27,9 +27,13 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/getgeneratedtoken', [GenerateFacebookToken::class, 'generatetoken']);
 Route::get('/getlonglivedtoken', [GenerateFacebookToken::class, 'GenerateLongLifeAccessToken']);
 Route::get('/generatepageaccesstoken', [GeneratePageAccessToken::class, 'index']);
+
 Route::post('/store_fb_insta_page_access_token', [GeneratePageAccessToken::class, 'StoreFBInstaPageAccessToken']);
 Route::get('/get_fb_insta_page_access_token', [PostToFaceBookInsta::class, 'index']);
 Route::post('/post_to_facebook', [PostToFaceBookInsta::class, 'PostToFaceBook']);
+
+Route::get('/post_facebook_userdetails', [GenerateFacebookToken::class, 'facebook_userdetails']);
+Route::get('/get_facebook_userdetails', [GenerateFacebookToken::class, 'get_facebook_userdetails']);
 // TWITTER ( NOT WORKING)
 Route::post('/generate_twitter_oauth_token', [GenerateTwitterAccessToken::class, 'index']);
 });

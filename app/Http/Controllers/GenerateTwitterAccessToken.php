@@ -3,7 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\StoreFacebookLongAccessToken;
-use Illuminate\Http\Request;
+use App\Models\StoreFBInstaPageAccessToken;
+use DOMDocument;
+use DOMXPath;
+use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Subscriber\Oauth\Oauth1;
+use Illuminate\Pagination\UrlWindow;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL;
 
 class GenerateTwitterAccessToken extends Controller
 {
@@ -11,10 +20,10 @@ class GenerateTwitterAccessToken extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {     
-        // NOT WORKING
-       
-        $php_curl = curl_init();
+    {   
+        
+
+$php_curl = curl_init();
 
         //  $access_token = $temp_token->access_token;
 
@@ -23,47 +32,47 @@ class GenerateTwitterAccessToken extends Controller
             'oauth_callback' => $product->grant_type = env('TWITTER_OAUTH_CALLBACK'),
             'oauth_consumer_key' => $product->client_id = env('TWITTER_OAUTH_CONSUMER_KEY'),
         ];
-         return response()->json([
-            $products_data
-        ]);
+        //  return response()->json([
+        //     $products_data
+        // ]);
         // return print_r($products_data);
         $php_curl = curl_init();
         curl_setopt_array($php_curl, array(
             CURLOPT_URL => "https://api.twitter.com/oauth/request_token?",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
+            CURLOPT_HEADER =>false,
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 1000,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($products_data),
+            // CURLOPT_POSTFIELDS => json_encode($products_data),
             CURLOPT_HTTPHEADER => array(
                 // Set POST here requred headers
-                "accept: */*",
-                "accept-language: en-US,en;q=0.8",
-                "content-type: application/json",
-            ),
-        ));
+                 'Accept: application/vnd.api+json',
+    'Content-Type: application/vnd.api+json',
+    ': ',
+    'Authorization: OAuth oauth_consumer_key="E5iMsfG3RbZLUPMWeOhYX4OAl",oauth_token="1513132729360998401-uNr50McGWITP5GkuhQEzaFYywLPQVs",oauth_signature_method="HMAC-SHA1",oauth_timestamp="1685026439",oauth_nonce="Jll8xUbqW3w",oauth_version="1.0",oauth_signature="vZiQ%2FYNY%2BSDUJmCkmhZ9ORNPI%2FM%3D"',
+    'Cookie: guest_id=v1%3A167541078306846013; guest_id_ads=v1%3A167541078306846013; guest_id_marketing=v1%3A167541078306846013; personalization_id="v1_ydaMqRM3GGjHVIIkJeUFLQ=="'
+  ),
+        ),);
+ 
 
-        
         $final_results = curl_exec($php_curl);
         $err = curl_error($php_curl);
 
+        
+        
+        
         curl_close($php_curl);
 
-        if ($err) {
-            echo "Laravel cURL Error #:" . $err;
-        } else {
-            foreach (json_decode($final_results) as $room_name => $room) {
-               // STORE THE LONG LIFE ACCESS TOKEN IN $token_data variable
-                $token_data = @$room ;
-               
-                return response()->json([
-                    $token_data
-                ]);
-            }
-      
-        }
+        
+        echo($final_results) ;
+        return response()->json([
+            "response"=> json_encode($final_results, JSON_NUMERIC_CHECK)
+        ]);
+
+       
     }
 
     /**
