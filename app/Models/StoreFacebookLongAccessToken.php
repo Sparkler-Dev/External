@@ -13,7 +13,11 @@ class StoreFacebookLongAccessToken extends Model
       'user_id', 'client_id', 'long_lived_access_token'
     ];
 
+    protected $with = ['facebook_userdetails'];
     public function user(){
-         return $this->belongsTo(User::class);
+         return $this->belongsTo(User::class,);
      }
+    public function facebook_userdetails(){
+       return $this->belongsTo(StoreFacebookUserDetails::class, 'client_id', 'client_id' );
+    }
 }

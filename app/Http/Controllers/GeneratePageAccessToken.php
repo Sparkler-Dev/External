@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFBInstPageAccessToken;
 use App\Models\StoreFacebookAccessToken;
+use App\Models\StoreFacebookLongAccessToken;
 use App\Models\StoreFBInstaPageAccessToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,83 +14,17 @@ class GeneratePageAccessToken extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function getfacebookpageaccesstoken()
+    
     {  
-        $facebook_long_access_token = StoreFacebookAccessToken::latest('id')->first();
 
-        // return response()->json([
-        //     "info" => $facebook_long_access_token 
+        $user_id = auth('sanctum')->user();
+        $facebook_long_access_token = StoreFacebookLongAccessToken::where('client_id', $user_id->client_id)->first();
+        //   return response()->json([
+        //     $facebook_long_access_token
         // ]);
-
-        $long_lived_access_token = $facebook_long_access_token->access_token;
-        $php_curl = curl_init();
-
-        curl_setopt_array($php_curl, array(
-            CURLOPT_URL => "https://graph.facebook.com/v6.0/me?access_token=$long_lived_access_token",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_TIMEOUT => 1000,
-
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                // Set Here Your Laravel curl Requesred Headers
-                'Content-Type: application/json',
-            ),
-        ));
-        $final_results = curl_exec($php_curl);
-        $err = curl_error($php_curl);
-        $err = curl_error($php_curl);
-        curl_close($php_curl);
-
-        if ($err) {
-            echo "Laravel cURL Error #:" . $err;
-        } else {
-             // GET THE RESULT AND RUN INSIDE A FOREACH LOOP
-            foreach (json_decode($final_results) as $room_name => $room) {
-                $user_info = @$room;
-                $error = @$room->message;
-
-
-            //    return response()->json([
-            //      "user_page_info"=> json_decode($final_results)
-            //    ],200);
-            }
-        }
-
-         $user_page_info = json_decode($final_results);
-
-          return $this->store( $user_page_info, $facebook_long_access_token, $request);
-         
-        
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store($user_page_info, $facebook_long_access_token, $request)
-    {
-
-
-        //    return response()->json([
-        //      'user_info' => $user_page_info,
-        //      "facebook_long_access_token" => $facebook_long_access_token
-        //  ]);
-
-        $client_id = env('CLIENT_ID');
-        $code =  $request->code;
-        $client_secret = env('CLIENT_SECRET');
-        $redirect_uri = env('REDIRECT_URI');
-        $user_page_info_id = $user_page_info->id;
-        $facebook_long_access_token = $facebook_long_access_token->access_token;
+        $user_page_info_id = $facebook_long_access_token->facebook_userdetails->facebook_user_id;
+        $facebook_long_access_token = $facebook_long_access_token->long_lived_access_token;
         $php_curl = curl_init();
 
         curl_setopt_array($php_curl, array(
@@ -113,27 +48,22 @@ class GeneratePageAccessToken extends Controller
         if ($err) {
             echo "Laravel cURL Error #:" . $err;
         } else {
-             // GET THE RESULT AND RUN INSIDE A FOREACH LOOP
-            foreach (json_decode($final_results) as $room_name => $room) {
-                $token_data = @$room;
-                $error = @$room->message;
-                // PASS THE RESULT AS A PARAMETER TO A NEW FUNCTION
-                // return $this->StoreAccessToken($token_data, $error, $request);
-                // return response()->json([
-                //     "token"=> $token_data
-                // ]);
-            //    return $this->StoreAccessToken($token_data, $error, $request);
-               return response()->json([
-                 'user_page_information'=>$user_page_info,
-                 "facebook_instagram_page_access_token"=> $token_data,
-               ],200);
-            }
+
+               $page_data = json_decode($final_results);
+
+            return response()->json([
+                   'facebook_page_access_token' => $page_data->data
+                 ]);
+
+                
         }
 
-
+          
+            
+        
     }
 
-    public function StoreFBInstaPageAccessToken(StoreFBInstPageAccessToken $request) {
+    public function StoreFBPageAccessToken(StoreFBInstPageAccessToken $request) {
           $request->validated($request->all());
            
            $store_page_access_token =  StoreFBInstaPageAccessToken::create([
