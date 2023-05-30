@@ -11,27 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class GenerateFacebookToken extends Controller
+class GenerateFacebookTokenController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
+    // GET ACCESS TOKEN
     public function generatetoken( Request $request)
     {
         
@@ -99,13 +81,6 @@ class GenerateFacebookToken extends Controller
              return response()->json(['message' => $error], 400);
         }
 
-
-
-        // return response()->json([
-        //     $user_id,
-        //     $token_data
-        // ]);
-
         if($token_data){
             $task = StoreFacebookAccessToken::create([
           'user_id'=>  Auth::user()->id,
@@ -113,8 +88,6 @@ class GenerateFacebookToken extends Controller
           'access_token'=>$token_data,
         ]);
 
-        // return new StoreFacebookAccessTokenResource($task);
-        // return new StoreFacebookAccessTokenResource($task);
 
         return $this->GenerateLongLifeAccessToken($task, $request);
         }
@@ -123,16 +96,12 @@ class GenerateFacebookToken extends Controller
     }
 
 
-
+    // GENERATE FACEBOOK LIFE LONG ACCESS TOKEN
     public function GenerateLongLifeAccessToken( $task, Request $request){
 
 
         $temp_token = StoreFacebookAccessToken::latest('id')->first();
 
-        // return response()->json([
-        //     "temp_token" => $temp_token->access_token
-        // ]);
-    
 
          $grant_type = "fb_exchange_token";
          $client_id = env('CLIENT_ID');
@@ -142,8 +111,6 @@ class GenerateFacebookToken extends Controller
         $product = new StoreFacebookLongAccessToken;
         $product->long_lived_access_token = $request->long_lived_access_token;
         $product->long_lived_access_token = $access_token;
-        // SEND THE REQUIRED BODY ALONG WITH ACCESS TOKEN FROM @GetAccessToken FUNCTION
-        // TO GENERATE THE LONG LIFE ACCESS TOKEN
         $products_data = [
             'grant_type' => $product->grant_type = "fb_exchange_token",
             'client_id' => $product->client_id = env('CLIENT_ID'),
@@ -178,10 +145,7 @@ class GenerateFacebookToken extends Controller
             echo "Laravel cURL Error #:" . $err;
         } else {
             foreach (json_decode($final_results) as $room_name => $room) {
-               // STORE THE LONG LIFE ACCESS TOKEN IN $token_data variable
                 $token_data = @$room ;
-                // PASS THE LONG LIFE ACCESS TOKEN FROM $token_data 
-                // TO @StoreLongLifeAccessToken FUNCTION TO STORE THE LONG LIFE ACCESS TOKEN TO THE DB
                 return $this->StoreLongLifeAccessToken($token_data,  $request);
             }
             // return response()->json(['message' => 'Post added successfully'], 200);
@@ -193,33 +157,19 @@ class GenerateFacebookToken extends Controller
 
      
 
+     // STORE FACEBOOM LONG ACCESS LIFE TOKEN
      public function StoreLongLifeAccessToken($token_data,  $request){
-
-        // return response()->json([
-        //   "long_lived_facebook_access_token"=> $token_data
-        // ]);
             $user_id = auth('sanctum')->user();
             $store_long_lived_access_token = new StoreFacebookLongAccessToken; 
             $store_long_lived_access_token->client_id = $user_id->client_id;  
             $store_long_lived_access_token->user_id = $user_id->id;  
             $store_long_lived_access_token->long_lived_access_token = $token_data;    
             $store_long_lived_access_token->save();    
-            // return response()->json([
-            // 'status'=>200,
-            // 'long_lived_access_token'=> $store_long_lived_access_token,
-
-            // ]);
              return $this->facebook_userdetails($store_long_lived_access_token, $request);
 
      }
-
+     // STORE FACEBOOK USER DETAILS
      public function facebook_userdetails($store_long_lived_access_token,  $request){
-        //    return response()->json([
-        //      'status'=>200,
-        //     //   'call_from_facebook_userdetails' => json_decode($store_long_lived_access_token),
-        //       'call_from_facebook_userdetails' => $store_long_lived_access_token,
-
-        // ]);
          $user_id = auth('sanctum')->user();
          $user_details = StoreFacebookLongAccessToken::where('client_id', $user_id->client_id)->first();
 
@@ -235,7 +185,6 @@ class GenerateFacebookToken extends Controller
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "GET",
             CURLOPT_HTTPHEADER => array(
-                // Set Here Your Laravel curl Requesred Headers
                 'Content-Type: application/json',
             ),
         ));
@@ -267,51 +216,17 @@ class GenerateFacebookToken extends Controller
 
      }
 
+         // GET FACEBOOK USER DETAILS
      public function get_facebook_userdetails(){
         $user_id = auth('sanctum')->user();
         $user_details = StoreFacebookUserDetails::where('client_id', $user_id->client_id)->first();
         
               return response()->json([
              'status'=>200,
-            //   'call_from_facebook_userdetails' => json_decode($store_long_lived_access_token),
               'facebook_user_details_table' => $user_details,
 
         ]);
 
      }
 
-    
-    
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

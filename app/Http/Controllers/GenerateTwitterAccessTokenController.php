@@ -14,7 +14,7 @@ use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 
-class GenerateTwitterAccessToken extends Controller
+class GenerateTwitterAccessTokenController extends Controller
 {
     /**
      * Display a listing of the resource.

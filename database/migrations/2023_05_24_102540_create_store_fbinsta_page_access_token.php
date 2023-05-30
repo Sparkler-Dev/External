@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fbinsta_page_access_token', function (Blueprint $table) {
+        Schema::create('facebook_page_access_token', function (Blueprint $table) {
             $table->id();
              $table->unsignedBigInteger("user_id");
              $table->string('client_id');

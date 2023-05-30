@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\GenerateFacebookToken;
-use App\Http\Controllers\GeneratePageAccessToken;
-use App\Http\Controllers\GenerateTwitterAccessToken;
-use App\Http\Controllers\PostToFaceBookInsta;
+use App\Http\Controllers\GenerateFacebookTokenController;
+use App\Http\Controllers\GeneratePageAccessTokenController;
+use App\Http\Controllers\GenerateTwitterAccessTokenController;
+use App\Http\Controllers\PostToFaceBookController;
 use App\Http\Controllers\TasksController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,20 +24,23 @@ Route::get('/tasks', [TasksController::class, 'index']);
 Route::group(['middleware' => ['auth:sanctum']], function() {
 Route::post('/logout', [AuthController::class, 'logout']);
 // FACEBOOK
-Route::post('/getgeneratedtoken', [GenerateFacebookToken::class, 'generatetoken']);
-Route::get('/getlonglivedtoken', [GenerateFacebookToken::class, 'GenerateLongLifeAccessToken']);
+Route::post('/getgeneratedtoken', [GenerateFacebookTokenController::class, 'generatetoken']);
+Route::get('/getlonglivedtoken', [GenerateFacebookTokenController::class, 'GenerateLongLifeAccessToken']);
 
 
-Route::get('/generatepageaccesstoken', [GeneratePageAccessToken::class, 'getfacebookpageaccesstoken']);
+Route::get('/generatepageaccesstoken', [GeneratePageAccessTokenController::class, 'getfacebookpageaccesstoken']);
 
-Route::post('/store_fb_access_token', [GeneratePageAccessToken::class, 'StoreFBPageAccessToken']);
-Route::get('/get_fb_insta_page_access_token', [PostToFaceBookInsta::class, 'index']);
-Route::post('/post_to_facebook', [PostToFaceBookInsta::class, 'PostToFaceBook']);
+Route::post('/store_facebook_access_token', [GeneratePageAccessTokenController::class, 'StoreFBPageAccessToken']);
+Route::get('/get_fb_page_access_token', [PostToFaceBookController::class, 'index']);
 
-Route::get('/post_facebook_userdetails', [GenerateFacebookToken::class, 'facebook_userdetails']);
-Route::get('/get_facebook_userdetails', [GenerateFacebookToken::class, 'get_facebook_userdetails']);
+
+Route::post('/post_to_facebook', [PostToFaceBookController::class, 'PostToFaceBook']);
+Route::post('/schedule_facebook_post', [PostToFaceBookController::class, 'SchedulePostToFacebook']);
+
+Route::get('/post_facebook_userdetails', [GenerateFacebookTokenController::class, 'facebook_userdetails']);
+Route::get('/get_facebook_userdetails', [GenerateFacebookTokenController::class, 'get_facebook_userdetails']);
 // TWITTER ( NOT WORKING)
-Route::post('/generate_twitter_oauth_token', [GenerateTwitterAccessToken::class, 'index']);
+Route::post('/generate_twitter_oauth_token', [GenerateTwitterAccessTokenController::class, 'index']);
 });
 
 
