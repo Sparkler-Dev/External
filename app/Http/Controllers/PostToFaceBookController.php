@@ -66,6 +66,8 @@ class PostToFaceBookController extends Controller
             foreach (json_decode($final_results) as $room_name => $room) {
                 $post_id = @$room ;
                 return response()->json([
+                    'status'=>200,
+                    'message'=>"Posted to facebook successfully",
                    "facebook_post_id" => $post_id,  
                 ]);
             }
@@ -115,6 +117,8 @@ class PostToFaceBookController extends Controller
             foreach (json_decode($final_results) as $room_name => $room) {
                 $post_id = @$room ;
                 return response()->json([
+                    'status'=>200,
+                    'message'=>"Scheduled a facebook post successfully",
                    "scheduled_facebook_post_id" => $post_id,  
                 ]);
             }

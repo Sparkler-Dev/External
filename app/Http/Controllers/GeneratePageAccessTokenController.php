@@ -97,7 +97,9 @@ class GeneratePageAccessTokenController extends Controller
         ]);
 
         return response()->json([
-            'response' => $store_page_access_token
+            'status'=>200,
+            'message'=>"Page access linked successfully",
+            'store_page_access_token' => $store_page_access_token
         ]);
 
     }

@@ -223,6 +223,7 @@ class GenerateFacebookTokenController extends Controller
         
               return response()->json([
              'status'=>200,
+              'message'=>"Account linked successfully",
               'facebook_user_details_table' => $user_details,
 
         ]);
