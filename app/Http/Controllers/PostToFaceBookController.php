@@ -119,7 +119,7 @@ class PostToFaceBookController extends Controller
                 return response()->json([
                     'status'=>200,
                     'message'=>"Scheduled a facebook post successfully",
-                   "scheduled_facebook_post_id" => $post_id,  
+                    "scheduled_facebook_post_id" => $post_id,  
                 ]);
             }
             

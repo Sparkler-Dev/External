@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FacebookInsightsController;
 use App\Http\Controllers\GenerateFacebookTokenController;
 use App\Http\Controllers\GeneratePageAccessTokenController;
 use App\Http\Controllers\GenerateTwitterAccessTokenController;
@@ -39,6 +40,11 @@ Route::post('/schedule_facebook_post', [PostToFaceBookController::class, 'Schedu
 
 Route::get('/post_facebook_userdetails', [GenerateFacebookTokenController::class, 'facebook_userdetails']);
 Route::get('/get_facebook_userdetails', [GenerateFacebookTokenController::class, 'get_facebook_userdetails']);
+
+Route::get('/get_single_facebook_page_impressions', [FacebookInsightsController::class, 'get_single_facebook_page_impressions']);
+
+
+
 // TWITTER ( NOT WORKING)
 Route::post('/generate_twitter_oauth_token', [GenerateTwitterAccessTokenController::class, 'index']);
 });
