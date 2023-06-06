@@ -43,6 +43,9 @@ Route::get('/get_facebook_userdetails', [GenerateFacebookTokenController::class,
 
 Route::get('/get_single_facebook_page_impressions', [FacebookInsightsController::class, 'get_single_facebook_page_impressions']);
 
+Route::get('/get_facebook_page_feed', [FacebookInsightsController::class, 'get_facebook_page_feed']);
+Route::get('/get_facebook_feed_by_id/{id}', [FacebookInsightsController::class, 'get_facebook_feed_by_id']);
+
 
 
 // TWITTER ( NOT WORKING)
