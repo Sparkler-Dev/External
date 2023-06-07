@@ -57,7 +57,7 @@ class FacebookInsightsController extends Controller
         $access_token = $get_page_access_token->access_token;  
          $php_curl = curl_init();
         curl_setopt_array($php_curl, array(
-            CURLOPT_URL => "https://graph.facebook.com/203991576656688/feed?access_token=EAANNGVck75sBAH1CcJBV25jwz13AfAvK5NBRvkJ2DrDzTB2aj2ICZAuC21Ww1kGoW3WZB03u3tlympovgvu36kpDsSnAZCjjU9lI5ihNxnFPODLoOnrOW2XoCCZBHRbMT2zEfi0ZAsJrfqNQIoFT5DtKMllg9lIarWG4XizwZBVyNe2mfX9T6X",
+            CURLOPT_URL => "https://graph.facebook.com/$page_id/feed?access_token=$access_token",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_TIMEOUT => 1000,
@@ -85,14 +85,14 @@ class FacebookInsightsController extends Controller
     }
 
     public function get_facebook_feed_by_id($id) {
-        $user_id = auth('sanctum')->user();
+         $user_id = auth('sanctum')->user();
          $get_page_access_token = StoreFacebookPageAccessToken::where('client_id', $user_id->client_id)->latest("id")->first();
          $feed_id = $id;      
         $access_token = $get_page_access_token->access_token;  
 
           $php_curl = curl_init();
         curl_setopt_array($php_curl, array(
-            CURLOPT_URL => "https://graph.facebook.com/$feed_id/insights?metric=post_reactions_like_total,post_reactions_love_total,post_reactions_wow_total&access_token=EAANNGVck75sBAH1CcJBV25jwz13AfAvK5NBRvkJ2DrDzTB2aj2ICZAuC21Ww1kGoW3WZB03u3tlympovgvu36kpDsSnAZCjjU9lI5ihNxnFPODLoOnrOW2XoCCZBHRbMT2zEfi0ZAsJrfqNQIoFT5DtKMllg9lIarWG4XizwZBVyNe2mfX9T6X",
+            CURLOPT_URL => "https://graph.facebook.com/$feed_id/insights?metric=post_reactions_like_total,post_reactions_love_total,post_reactions_wow_total&access_token=$access_token",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_TIMEOUT => 1000,
@@ -119,6 +119,42 @@ class FacebookInsightsController extends Controller
         }
 
 
+    }
+
+    public function get_facebook_matrics(){
+         $user_id = auth('sanctum')->user();
+         $get_page_access_token = StoreFacebookPageAccessToken::where('client_id', $user_id->client_id)->latest("id")->first();
+         $page_id = $get_page_access_token->page_id;          
+        $access_token = $get_page_access_token->access_token;  
+
+          $php_curl = curl_init();
+        curl_setopt_array($php_curl, array(
+            CURLOPT_URL => "https://graph.facebook.com/$page_id/insights?metric=page_impressions_unique,page_engaged_users&access_token=$access_token",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_TIMEOUT => 1000,
+
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+                // Set Here Your Laravel curl Requesred Headers
+                'Content-Type: application/json',
+            ),
+        ));
+        $final_results = curl_exec($php_curl);
+        $err = curl_error($php_curl);
+        $err = curl_error($php_curl);
+        curl_close($php_curl);
+
+        if ($err) {
+            echo "Laravel cURL Error #:" . $err;
+        } else {
+              $final_data = json_decode($final_results);
+              return response()->json([
+                   'facebook_page_impressions_28' => $final_data->data['4'],
+                   'facebook_page_engaged_users' => $final_data->data['5']
+               ]);
+        }
     }
     
 
