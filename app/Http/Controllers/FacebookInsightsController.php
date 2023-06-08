@@ -152,7 +152,11 @@ class FacebookInsightsController extends Controller
               $final_data = json_decode($final_results);
               return response()->json([
                    'facebook_page_impressions_28' => $final_data->data['4'],
-                   'facebook_page_engaged_users' => $final_data->data['5']
+                   'facebook_page_engaged_users_28' => $final_data->data['5'],
+                   'facebook_page_impressions_weekly' => $final_data->data['2'],
+                   'facebook_page_engaged_users_weekly' => $final_data->data['3'],
+                   'facebook_page_impressions_daily' => $final_data->data['0'],
+                   'facebook_page_engaged_users_daily' => $final_data->data['1'],
                ]);
         }
     }
