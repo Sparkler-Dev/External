@@ -64,12 +64,12 @@ class AuthController extends Controller
         'password'=> Hash::make($request->password)
        ]);
 
-       return response()->json([
-        'status'=>200,
-        'message'=>"Signup successfull",
-        $user,
-
-       ]);
+        return response()->json([
+            'status'=>200,
+            'message'=>"Signup successful",
+            'user' => $user,
+            'token' => $user->createToken('API Token')->plainTextToken
+        ]);
 
        
 

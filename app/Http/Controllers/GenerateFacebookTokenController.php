@@ -55,11 +55,7 @@ class GenerateFacebookTokenController extends Controller
             foreach (json_decode($final_results) as $room_name => $room) {
                 $token_data = @$room ;
                 $error = @$room->message;
-                // PASS THE RESULT AS A PARAMETER TO A NEW FUNCTION
-                // return $this->StoreAccessToken($token_data, $error, $request);
-                // return response()->json([
-                //     "token"=> $token_data
-                // ]);
+
                return $this->StoreAccessToken($user_id, $token_data, $error, $request);
             }
         }

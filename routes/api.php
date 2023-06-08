@@ -45,7 +45,9 @@ Route::get('/get_single_facebook_page_impressions', [FacebookInsightsController:
 
 Route::get('/get_facebook_page_feed', [FacebookInsightsController::class, 'get_facebook_page_feed']);
 Route::get('/get_facebook_feed_by_id/{id}', [FacebookInsightsController::class, 'get_facebook_feed_by_id']);
+
 Route::get('/get_facebook_metrics', [FacebookInsightsController::class, 'get_facebook_matrics']);
+Route::get('/get_facebook_pageid', [GeneratePageAccessTokenController::class, 'getFacebookPageId']);
 
 
 

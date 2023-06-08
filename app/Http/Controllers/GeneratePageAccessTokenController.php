@@ -104,6 +104,15 @@ class GeneratePageAccessTokenController extends Controller
 
     }
 
+    public function getFacebookPageId(){
+        $user_id = auth('sanctum')->user();
+        $facebook_page_id = StoreFacebookPageAccessToken::where('client_id', $user_id->client_id)->get();
+
+        return response()->json([
+            'facebook_page_id'=> $facebook_page_id
+        ]);
+    }
+
     /**
      * Display the specified resource.
      */
