@@ -37,6 +37,7 @@ Route::get('/get_fb_page_access_token', [PostToFaceBookController::class, 'index
 
 Route::post('/post_to_facebook', [PostToFaceBookController::class, 'PostToFaceBook']);
 Route::post('/schedule_facebook_post', [PostToFaceBookController::class, 'SchedulePostToFacebook']);
+Route::post('/publish_facebook_photo', [PostToFaceBookController::class, 'FacebookPublishPhoto']);
 
 Route::get('/post_facebook_userdetails', [GenerateFacebookTokenController::class, 'facebook_userdetails']);
 Route::get('/get_facebook_userdetails', [GenerateFacebookTokenController::class, 'get_facebook_userdetails']);
